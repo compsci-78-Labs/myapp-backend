@@ -46,7 +46,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            -f src/MyWebApi/Dockerfile \
+            -f src/WebApi/Dockerfile \
             -t ${{ secrets.DOCKER_USERNAME }}/mywebapi:latest \
             .
       
