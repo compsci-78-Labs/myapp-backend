@@ -1,6 +1,6 @@
 namespace WebApi.Features.Task;
 
-public class TaskService
+public class TaskService:ITaskService
 {
     
 }

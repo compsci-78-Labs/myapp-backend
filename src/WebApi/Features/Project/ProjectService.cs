@@ -1,6 +1,6 @@
 namespace WebApi.Features.Project;
 
-public class ProjectService
+public class ProjectService:IProjectService
 {
     
 }
