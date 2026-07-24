@@ -1,6 +1,6 @@
 namespace WebApi.Features.Task;
 
-public static class TaskEndPoints
+public static class TaskItemEndPoints
 {
     public static void MapTaskEndpoints(this WebApplication app)
     {

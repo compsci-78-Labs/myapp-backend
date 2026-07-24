@@ -1,6 +1,6 @@
 namespace WebApi.Features.Task;
 
-public interface ITaskService
+public interface ITaskItemService
 {
     
 }
