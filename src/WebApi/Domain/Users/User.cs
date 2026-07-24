@@ -10,4 +10,5 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     
     public ICollection<Project> Projects { get; set; } = new List<Project>();
+    public ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>();
 }
