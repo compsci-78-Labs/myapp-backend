@@ -1,8 +1,9 @@
-namespace WebApi.Domain;
+namespace WebApi.Domain.TaskItems;
 
 public enum Priority
 {
-    Low, 
-    Medium,
-    High,
+    Low = 0, 
+    Medium = 1,
+    High = 2,
+    Critical = 3,
 }

@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using WebApi.Domain;
+using WebApi.Domain.Users;
+using WebApi.Domain.Projects;
+using WebApi.Domain.TaskItems;
 
 namespace WebApi.Data;
 

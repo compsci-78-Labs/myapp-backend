@@ -1,5 +1,7 @@
+using WebApi.Domain.Projects;
+using WebApi.Domain.TaskItems;
 
-namespace WebApi.Domain;
+namespace WebApi.Domain.Users;
 
 public class User
 {
