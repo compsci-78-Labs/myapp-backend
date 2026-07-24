@@ -1,4 +1,5 @@
-namespace WebApi.Features.User;
+
+namespace WebApi.Domain;
 
 public class User
 {
@@ -7,4 +8,6 @@ public class User
     public string Email { get; set; } = String.Empty;
     public string PasswordHash { get; set; } = String.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
+    
+    public ICollection<Project> Projects { get; set; } = new List<Project>();
 }

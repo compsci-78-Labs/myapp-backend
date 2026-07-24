@@ -1,4 +1,4 @@
-namespace WebApi.Features.Task;
+namespace WebApi.Domain;
 
 public class TaskItem
 {

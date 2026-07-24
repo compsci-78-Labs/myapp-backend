@@ -1,4 +1,4 @@
-namespace WebApi.Features.Project;
+namespace WebApi.Domain;
 
 public class Project
 {

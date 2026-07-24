@@ -1,4 +1,4 @@
-namespace WebApi.Features.Task;
+namespace WebApi.Domain;
 
 public enum Priority
 {
