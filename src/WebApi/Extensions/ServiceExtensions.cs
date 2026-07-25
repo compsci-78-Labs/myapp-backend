@@ -1,4 +1,6 @@
 using WebApi.Data;
+using WebApi.Data.Repositories;
+using WebApi.Domain.Users;
 using WebApi.Features.Project;
 using WebApi.Features.Task;
 using WebApi.Features.User;
@@ -22,6 +24,7 @@ public static class ServiceExtensions
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<ITaskItemService, TaskItemService>();
 
+        services.AddScoped<IUserRepository, UserRepository>();
         return services;
     }
 }
