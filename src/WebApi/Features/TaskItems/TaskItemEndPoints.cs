@@ -4,12 +4,9 @@ public static class TaskItemEndPoints
 {
     public static void MapTaskEndpoints(this WebApplication app)
     {
-        app.MapGet("/projects", () =>
+        app.MapGet("/api/taskitems", () =>
         {
-            return Results.Ok(new[]
-            {
-                new { Id = 1, Name = "Laptop" }
-            });
+            
         });
     }
 }

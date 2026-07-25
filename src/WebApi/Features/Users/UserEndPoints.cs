@@ -4,12 +4,8 @@ public static class UserEndPoints
 {
     public static void MapUserEndpoints(this WebApplication app)
     {
-        app.MapGet("/tasks", () =>
+        app.MapGet("/api/users", () =>
         {
-            return Results.Ok(new[]
-            {
-                new { Id = 1, Name = "Laptop" }
-            });
         });
     }
 }

@@ -4,12 +4,9 @@ public static class ProjectEndPoints
 {
     public static void MapProjectEndpoints(this WebApplication app)
     {
-        app.MapGet("/projects", () =>
+        app.MapGet("/api/projects", () =>
         {
-            return Results.Ok(new[]
-            {
-                new { Id = 1, Name = "Laptop" }
-            });
+            
         });
     }
     
