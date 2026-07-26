@@ -1,6 +1,6 @@
-using WebApi.Features.Project;
-using WebApi.Features.Task;
-using WebApi.Features.User;
+using WebApi.Features.Projects;
+using WebApi.Features.TaskItems;
+using WebApi.Features.Users;
 
 namespace WebApi.Extensions;
 

@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using WebApi.Data;
 using WebApi.Domain.Users;
-using Program = Web.Api.Program;
+using Program = WebApi.Program;
 
-namespace Tests.Fixtures;
+namespace Tests.Common;
 
 public class WebApiFactory:WebApplicationFactory<Program>
 {

@@ -1,4 +1,4 @@
-namespace WebApi.Features.User;
+namespace WebApi.Features.Users;
 
 public static class UserEndPoints
 {

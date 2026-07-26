@@ -1,4 +1,4 @@
-namespace WebApi.Features.Task;
+namespace WebApi.Features.TaskItems;
 
 public static class TaskItemEndPoints
 {

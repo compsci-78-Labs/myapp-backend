@@ -1,7 +1,6 @@
 using System.Net;
 using FluentAssertions;
-using Tests.Fixtures;
-using WebApi.Domain.TaskItems;
+using Tests.Common;
 
 namespace Tests.Systems.EndPoints;
 

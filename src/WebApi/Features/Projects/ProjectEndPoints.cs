@@ -1,4 +1,4 @@
-namespace WebApi.Features.Project;
+namespace WebApi.Features.Projects;
 
 public static class ProjectEndPoints
 {

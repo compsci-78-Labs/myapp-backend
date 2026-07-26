@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using WebApi.Data;
 using WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,7 +51,7 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 }
 
 // REMARK: Required for functional and integration tests to work.
-namespace Web.Api
+namespace WebApi
 {
-    public partial class Program;
+    public partial class Program{};
 }
