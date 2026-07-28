@@ -2,7 +2,7 @@ using System.Net;
 using FluentAssertions;
 using Tests.Common;
 
-namespace Tests.Systems.EndPoints;
+namespace Tests.IntegrationTests.EndPoints;
 
 public class ProjectEndPointsTests:IClassFixture<WebApiFactory>
 {
