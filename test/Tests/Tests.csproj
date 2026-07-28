@@ -26,8 +26,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Systems\Data\" />
-      <Folder Include="Systems\Servcies\" />
+      <Folder Include="UnitTests\Repositories\" />
+      <Folder Include="UnitTests\Servcies\" />
     </ItemGroup>
 
     <ItemGroup>
