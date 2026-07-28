@@ -4,14 +4,9 @@ using Tests.Common;
 
 namespace Tests.IntegrationTests.EndPoints;
 
-public class TaskItemEndPointsTests:IClassFixture<WebApiFactory>
+public class TaskItemEndPointsTests(WebApiFactory factory) : IClassFixture<WebApiFactory>
 {
-    private readonly HttpClient _client;
-
-    public TaskItemEndPointsTests(WebApiFactory factory)
-    {
-        _client = factory.CreateClient();
-    }
+    private readonly HttpClient _client = factory.CreateClient();
 
     [Fact]
     public async Task GetTaskItems_ReturnsUsers()
