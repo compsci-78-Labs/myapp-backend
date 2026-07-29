@@ -33,19 +33,20 @@ public class WebApiFactory:WebApplicationFactory<Program>
             var sp = services.BuildServiceProvider();
 
             using var scope = sp.CreateScope();
-
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
+            
             db.Database.EnsureCreated();
-
-            db.Users.AddRange(
-                new User { Name = "Alice" },
-                new User { Name = "Bob" });
-
-            db.SaveChanges();
         });
     }
+    public async Task SeedDatabaseAsync()
+    {
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+        DbSeeder.Seed(db);
+
+        await Task.CompletedTask;
+    }
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
