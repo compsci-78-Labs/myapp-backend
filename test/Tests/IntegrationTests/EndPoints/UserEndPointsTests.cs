@@ -34,8 +34,8 @@ public class UserEndPointsTests(WebApiFactory factory) : IClassFixture<WebApiFac
     public async Task GetUsers_ReturnsEmptyList_WhenUsersDoseNotExist()
     {
         // Arrange
-        //await factory.SeedDatabaseAsync();
-        
+        await factory.ClearDatabaseAsync();
+
         // Act
         var response = await _client.GetAsync("/api/users");
         var users = await response.Content.ReadFromJsonAsync<List<User>>();
@@ -43,6 +43,15 @@ public class UserEndPointsTests(WebApiFactory factory) : IClassFixture<WebApiFac
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         users.Should().NotBeNull();
-        users.Should().HaveCount(0);
+        users.Should().BeEmpty();
+    }
+    
+    [Fact]
+    public async Task GetUserById_ReturnsUser_WhenExists()
+    {
+        // Act
+        var response = await _client.GetAsync($"/api/users/{Guid.NewGuid()}");
+        var users = await response.Content.ReadFromJsonAsync<User>();
+        
     }
 }
