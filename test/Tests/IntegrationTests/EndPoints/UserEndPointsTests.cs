@@ -29,4 +29,20 @@ public class UserEndPointsTests(WebApiFactory factory) : IClassFixture<WebApiFac
         users[0].Name.Should().Be("Alice Johnson");
         users[1].Name.Should().Be("Bob Smith");
     }
+    
+    [Fact]
+    public async Task GetUsers_ReturnsEmptyList_WhenUsersDoseNotExist()
+    {
+        // Arrange
+        //await factory.SeedDatabaseAsync();
+        
+        // Act
+        var response = await _client.GetAsync("/api/users");
+        var users = await response.Content.ReadFromJsonAsync<List<User>>();
+        
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        users.Should().NotBeNull();
+        users.Should().HaveCount(0);
+    }
 }
