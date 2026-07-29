@@ -3,7 +3,7 @@ using WebApi.Data.Repositories;
 using WebApi.Domain.Users;
 using WebApi.Features.Project;
 using WebApi.Features.Task;
-using WebApi.Features.User;
+using WebApi.Features.Users;
 
 namespace WebApi.Extensions;
 

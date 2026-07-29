@@ -43,9 +43,7 @@ public class WebApiFactory:WebApplicationFactory<Program>
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        DbSeeder.Seed(db);
-
-        await Task.CompletedTask;
+        await DbSeeder.Seed(db);
     }
     protected override void Dispose(bool disposing)
     {

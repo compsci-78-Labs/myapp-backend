@@ -1,8 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
+using Moq;
 using Tests.Common;
 using WebApi.Domain.Users;
+using WebApi.Features.Users;
 
 namespace Tests.IntegrationTests.EndPoints;
 
@@ -18,12 +20,13 @@ public class UserEndPointsTests(WebApiFactory factory) : IClassFixture<WebApiFac
         
         // Act
         var response = await _client.GetAsync("/api/users");
+        var users = await response.Content.ReadFromJsonAsync<List<User>>();
         
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var users = await response.Content.ReadFromJsonAsync<List<User>>();
-        users.Should().NotBeNullOrEmpty();
-        users.Count.Should().Be(2);
-
+        users.Should().NotBeNull();
+        users.Should().HaveCount(2);
+        users[0].Name.Should().Be("Alice Johnson");
+        users[1].Name.Should().Be("Bob Smith");
     }
 }

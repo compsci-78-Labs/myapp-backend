@@ -1,6 +1,12 @@
-namespace WebApi.Features.User;
+using WebApi.Domain.Users;
 
-public class UserService:IUserService
+namespace WebApi.Features.Users;
+
+public class UserService(IUserRepository repository):IUserService
 {
-    
+    public async Task<IEnumerable<User>> GetAllAsync()
+    {
+        var users = await repository.GetAllAsync();
+        return users;
+    }
 }

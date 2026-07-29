@@ -1,6 +1,7 @@
-namespace WebApi.Features.User;
+using WebApi.Domain.Users;
+namespace WebApi.Features.Users;
 
-public class IUserService
+public interface IUserService
 {
-    
+    Task<IEnumerable<User>> GetAllAsync();
 }

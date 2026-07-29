@@ -8,9 +8,10 @@ namespace Tests.Common;
 
 public static class DbSeeder
 {
-    public static void Seed(AppDbContext db)
+    public static async Task Seed(AppDbContext db)
     {
-        db.Database.EnsureCreated();
+        await db.Database.EnsureDeletedAsync();
+        await db.Database.EnsureCreatedAsync();
         
         if (db.Users.Any()) return;
 
@@ -97,8 +98,7 @@ public static class DbSeeder
             User = alice
         };
 
-        db.TaskItems.AddRange(task1, task2, task3);
-
-        db.SaveChanges();
+       await db.TaskItems.AddRangeAsync(task1, task2, task3);
+        await db.SaveChangesAsync();
     }
 }
