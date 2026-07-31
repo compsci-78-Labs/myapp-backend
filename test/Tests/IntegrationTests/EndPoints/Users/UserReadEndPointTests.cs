@@ -6,7 +6,7 @@ using WebApi.Domain.Users;
 
 namespace Tests.IntegrationTests.EndPoints.Users;
 
-public class UserReadEndPointsTests(WebApiFactory factory) : IClassFixture<WebApiFactory>
+public class UserReadEndPointTests(WebApiFactory factory) : IClassFixture<WebApiFactory>
 {
     private readonly HttpClient _client = factory.CreateClient();
     
