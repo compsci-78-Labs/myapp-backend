@@ -2,7 +2,7 @@ using WebApi.Domain.Users;
 
 namespace WebApi.Features.Users;
 
-public static class UserEndPoints
+public static class UserReadEndPoints
 {
     public static void MapUserEndpoints(this WebApplication app)
     {
@@ -12,6 +12,12 @@ public static class UserEndPoints
 
             return Results.Ok(users);
 
+        });
+        app.MapGet("/api/users/{id}",async (IUserService service, Guid id ) =>
+        {
+            var user = await service.GetByIdAsync(id);
+            
+            return Results.Ok(user);
         });
     }
 }

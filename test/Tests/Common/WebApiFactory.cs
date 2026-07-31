@@ -45,15 +45,19 @@ public class WebApiFactory:WebApplicationFactory<Program>
 
         await DbSeeder.Seed(db);
     }
-    public async Task ClearDatabaseAsync()
+    public async Task ClearDatabaseTablesAsync()
     {
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        
-        db.Users.RemoveRange(db.Users); 
-        db.Projects.RemoveRange(db.Projects); 
-        db.TaskItems.RemoveRange(db.TaskItems); 
+     
+        // Clear all data from the database
+        db.Users.RemoveRange(db.Users);
+        db.Projects.RemoveRange(db.Projects);
+        db.TaskItems.RemoveRange(db.TaskItems);
+
         await db.SaveChangesAsync();
+
+            ;
     }
     protected override void Dispose(bool disposing)
     {

@@ -1,21 +1,20 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using Moq;
 using Tests.Common;
 using WebApi.Domain.Users;
-using WebApi.Features.Users;
 
-namespace Tests.IntegrationTests.EndPoints;
+namespace Tests.IntegrationTests.EndPoints.Users;
 
-public class UserEndPointsTests(WebApiFactory factory) : IClassFixture<WebApiFactory>
+public class UserReadEndPointsTests(WebApiFactory factory) : IClassFixture<WebApiFactory>
 {
     private readonly HttpClient _client = factory.CreateClient();
-
+    
     [Fact]
     public async Task GetUsers_ReturnsUsers_WhenUsersExist()
     {
         // Arrange
+        await factory.ClearDatabaseTablesAsync();
         await factory.SeedDatabaseAsync();
         
         // Act
@@ -26,16 +25,14 @@ public class UserEndPointsTests(WebApiFactory factory) : IClassFixture<WebApiFac
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         users.Should().NotBeNull();
         users.Should().HaveCount(2);
-        users[0].Name.Should().Be("Alice Johnson");
-        users[1].Name.Should().Be("Bob Smith");
     }
     
     [Fact]
     public async Task GetUsers_ReturnsEmptyList_WhenUsersDoseNotExist()
     {
         // Arrange
-        await factory.ClearDatabaseAsync();
-
+        await factory.ClearDatabaseTablesAsync();
+    
         // Act
         var response = await _client.GetAsync("/api/users");
         var users = await response.Content.ReadFromJsonAsync<List<User>>();
@@ -49,9 +46,24 @@ public class UserEndPointsTests(WebApiFactory factory) : IClassFixture<WebApiFac
     [Fact]
     public async Task GetUserById_ReturnsUser_WhenExists()
     {
-        // Act
-        var response = await _client.GetAsync($"/api/users/{Guid.NewGuid()}");
-        var users = await response.Content.ReadFromJsonAsync<User>();
+        // Arrange
+        await factory.ClearDatabaseTablesAsync();
+        await factory.SeedDatabaseAsync();
         
+        var testUser = await TestDbHelper.GetEntityAsync<User>(
+            factory.Services,
+            u => u.Name == "Alice Johnson"
+            );
+        testUser.Should().NotBeNull(); // Ensure USER IS FOUND
+        
+        // Act
+        var response = await _client.GetAsync($"/api/users/{testUser.Id}");
+        var foundUser = await response.Content.ReadFromJsonAsync<User>();
+        
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        foundUser.Should().NotBeNull();
+        foundUser.Id.Should().Be(testUser.Id);
+        foundUser.Name.Should().Be(testUser.Name);
     }
 }

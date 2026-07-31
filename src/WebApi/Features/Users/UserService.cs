@@ -9,4 +9,9 @@ public class UserService(IUserRepository repository):IUserService
         var users = await repository.GetAllAsync();
         return users;
     }
+    public async Task<User?> GetByIdAsync(Guid id)
+    {
+        var user = await repository.GetByIdAsync(id);
+        return user;
+    }
 }

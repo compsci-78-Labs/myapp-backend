@@ -10,11 +10,6 @@ public static class DbSeeder
 {
     public static async Task Seed(AppDbContext db)
     {
-        await db.Database.EnsureDeletedAsync();
-        await db.Database.EnsureCreatedAsync();
-        
-        if (db.Users.Any()) return;
-
         // Users
         var alice = new User
         {
@@ -98,7 +93,7 @@ public static class DbSeeder
             User = alice
         };
 
-       await db.TaskItems.AddRangeAsync(task1, task2, task3);
+        await db.TaskItems.AddRangeAsync(task1, task2, task3);
         await db.SaveChangesAsync();
     }
 }
