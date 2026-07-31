@@ -14,4 +14,10 @@ public class UserService(IUserRepository repository):IUserService
         var user = await repository.GetByIdAsync(id);
         return user;
     }
+
+    public async Task<User?> AddAsync(User user)
+    {
+        var addedUser = await repository.AddAsync(user);
+        return addedUser;
+    }
 }

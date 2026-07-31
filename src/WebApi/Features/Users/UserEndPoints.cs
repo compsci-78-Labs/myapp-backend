@@ -23,6 +23,9 @@ public static class UserEndPoints
         
         app.MapPost("/api/users",async (IUserService service, User newUser ) =>
         {
+            var user = await service.AddAsync(newUser);
+            
+            return Results.Created<User>($"/api/users/{user.Id}", user);
             
         });
     }

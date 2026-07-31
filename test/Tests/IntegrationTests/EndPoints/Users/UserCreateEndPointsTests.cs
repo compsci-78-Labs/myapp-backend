@@ -27,6 +27,12 @@ public class UserCreateEndPointsTests(WebApiFactory factory):IClassFixture<WebAp
         response.StatusCode.Should().Be(HttpStatusCode.Created);
 
         var createdUser = await response.Content.ReadFromJsonAsync<User>();
+        
+        // Assert
+        createdUser.Should().NotBeNull();
+        createdUser.Id.Should().NotBeEmpty();
+        createdUser.Name.Should().Be("John Doe");
+        createdUser.Email.Should().Be("john.doe@example.com");
 
     }
 }
