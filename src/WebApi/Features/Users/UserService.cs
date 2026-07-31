@@ -1,8 +1,9 @@
+using WebApi.Data;
 using WebApi.Domain.Users;
 
 namespace WebApi.Features.Users;
 
-public class UserService(IUserRepository repository):IUserService
+public class UserService(IUserRepository repository,IUnitOfWork unitOfWork):IUserService
 {
     public async Task<IEnumerable<User>> GetAllAsync()
     {
@@ -17,7 +18,10 @@ public class UserService(IUserRepository repository):IUserService
 
     public async Task<User?> AddAsync(User user)
     {
-        var addedUser = await repository.AddAsync(user);
-        return addedUser;
+        await repository.AddAsync(user);
+        
+        await unitOfWork.SaveChangesAsync();
+        
+        return user;
     }
 }

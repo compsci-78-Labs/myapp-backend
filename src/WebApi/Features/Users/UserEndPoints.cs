@@ -25,7 +25,7 @@ public static class UserEndPoints
         {
             var user = await service.AddAsync(newUser);
             
-            return Results.Created<User>($"/api/users/{user.Id}", user);
+            return Results.Created<User>($"/api/users/{user?.Id}", user);
             
         });
     }

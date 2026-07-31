@@ -18,16 +18,13 @@ public class UserRepository(AppDbContext context) : IUserRepository
 
     public async Task<User?> AddAsync(User user)
     {
-        context.Users.Add(user);
-        
-        await context.SaveChangesAsync();
-        
+        await context.Users.AddAsync(user);
+
         return user;
     }
 
-    public async Task DeleteAsync(User user)
+    public void DeleteAsync(User user)
     {
-        context.Users.Remove(user);
-        await context.SaveChangesAsync();
+         context.Users.Remove(user);
     }
 }

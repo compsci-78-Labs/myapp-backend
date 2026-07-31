@@ -25,6 +25,7 @@ public static class ServiceExtensions
         services.AddScoped<ITaskItemService, TaskItemService>();
 
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         return services;
     }
 }
