@@ -1,5 +1,7 @@
 using WebApi.Domain.Users;
+
 namespace WebApi.Features.Users;
+
 
 public interface IUserService
 {
@@ -7,5 +9,5 @@ public interface IUserService
     Task<User?> GetByIdAsync(Guid id);
     Task <User?> AddAsync(User user);
     Task <User?> Update(User user);
-    Task <User?> Delete(User user);
+    Task Delete(Guid id);
 }

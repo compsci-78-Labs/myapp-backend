@@ -31,7 +31,5 @@ public class UserDeleteEndPointTests(WebApiFactory factory):IClassFixture<WebApi
         // Assert
         var getResponse = await _client.GetAsync($"/api/users/{createdUser.Id}");
         getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
-
-
     }
 }

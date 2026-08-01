@@ -17,8 +17,7 @@ public static class UserEndPoints
         app.MapGet("/api/users/{id}",async (IUserService service, Guid id ) =>
         {
             var user = await service.GetByIdAsync(id);
-            
-            return Results.Ok(user);
+            return user != null ? Results.Ok(user) : Results.NotFound();
         });
         
         app.MapPost("/api/users",async (IUserService service, User newUser ) =>
@@ -34,6 +33,14 @@ public static class UserEndPoints
             var user = await service.Update(userUpdates);
             
             return Results.Ok(user);
+            
+        });
+        
+        app.MapDelete("/api/users/{id}",async (IUserService service, Guid id) =>
+        {
+            await service.Delete(id);
+            
+            return Results.NoContent();
             
         });
     }

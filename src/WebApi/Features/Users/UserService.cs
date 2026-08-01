@@ -40,12 +40,15 @@ public class UserService(IUserRepository repository,IUnitOfWork unitOfWork):IUse
         return userDb;
     }
 
-    public async Task<User?> Delete(User user)
+    public async Task Delete(Guid id)
     {
-        repository.Delete(user);
+        var userDb = await repository.GetByIdAsync(id);
+        
+        if (userDb == null) 
+            throw new Exception("User not found") ;
+
+        repository.Delete(userDb);
         
         await unitOfWork.SaveChangesAsync();
-        
-        return user;
     }
 }

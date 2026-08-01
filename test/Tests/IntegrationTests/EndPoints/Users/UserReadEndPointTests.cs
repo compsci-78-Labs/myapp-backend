@@ -66,4 +66,26 @@ public class UserReadEndPointTests(WebApiFactory factory) : IClassFixture<WebApi
         foundUser.Id.Should().Be(testUser.Id);
         foundUser.Name.Should().Be(testUser.Name);
     }
+    
+    [Fact]
+    public async Task GetUserById_ReturnsNotFound_WhenNotExists()
+    {
+        // Arrange
+        var nonExistentUser = new User
+        {
+            Id = Guid.NewGuid(),
+            Name = "Non-existent User",
+            Email = "nonexistent@example.com",
+            PasswordHash = "password",
+            CreatedAt = DateTime.UtcNow
+        };
+        
+        // Act
+        var response = await _client.GetAsync($"/api/users/{nonExistentUser.Id}");
+        var foundUser = await response.Content.ReadFromJsonAsync<User>();
+        
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        foundUser.Should().BeNull();
+    }
 }
