@@ -28,5 +28,13 @@ public static class UserEndPoints
             return Results.Created<User>($"/api/users/{user?.Id}", user);
             
         });
+        
+        app.MapPut("/api/users/{id}",async (IUserService service, User userUpdates ) =>
+        {
+            var user = await service.Update(userUpdates);
+            
+            return Results.Ok(user);
+            
+        });
     }
 }

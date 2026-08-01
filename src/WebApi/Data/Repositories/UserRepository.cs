@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using WebApi.Data;
 using WebApi.Domain.Users;
 
 namespace WebApi.Data.Repositories;
@@ -23,7 +22,12 @@ public class UserRepository(AppDbContext context) : IUserRepository
         return user;
     }
 
-    public void DeleteAsync(User user)
+    public void Update(User user)
+    {
+      context.Users.Update(user);
+    }
+
+    public void Delete(User user)
     {
          context.Users.Remove(user);
     }

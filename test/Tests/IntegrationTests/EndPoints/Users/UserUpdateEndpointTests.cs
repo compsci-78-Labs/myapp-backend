@@ -25,9 +25,9 @@ public class UserUpdateEndpointTests(WebApiFactory factory):IClassFixture<WebApi
         var response = await _client.PostAsJsonAsync("/api/users", newUser);
         var createdUser = await response.Content.ReadFromJsonAsync<User>();
 
-        var updatedUser = new User
+        var userUpdates = new User
         {
-            Id = createdUser.Id, 
+            Id = createdUser!.Id, 
             Name = "Updated Name",
             Email = "updated.email@example.com",
             PasswordHash = "newPassword",
@@ -35,11 +35,14 @@ public class UserUpdateEndpointTests(WebApiFactory factory):IClassFixture<WebApi
         };
         
         // Act
-        var updateResponse = await _client.PutAsJsonAsync($"/api/users/{createdUser.Id}", updatedUser);
+        var updateResponse = await _client.PutAsJsonAsync($"/api/users/{createdUser.Id}", userUpdates);
         updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var user = await updateResponse.Content.ReadFromJsonAsync<User>();
-
-
+        
+        // Assert
+        user.Should().NotBeNull();
+        user.Name.Should().Be("Updated Name");
+        user.Email.Should().Be("updated.email@example.com");
     }
 }
