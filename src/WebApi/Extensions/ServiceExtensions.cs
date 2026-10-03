@@ -1,7 +1,7 @@
 using WebApi.Data;
 using WebApi.Data.Repositories;
 using WebApi.Domain.Users;
-using WebApi.Features.Project;
+using WebApi.Features.Projects;
 using WebApi.Features.TaskItems;
 using WebApi.Features.Users;
 

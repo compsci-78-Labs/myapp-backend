@@ -8,6 +8,29 @@ public static class ProjectEndPoints
         {
             
         });
+        
+        app.MapGet("/api/projects/{id}", (int id) =>
+        {
+            
+        });
+        app.MapGet("/api/projects/{id}/taskitems", (int id) =>
+        {
+            
+        });
+        
+        app.MapPost("/api/projects", () =>
+        {
+            
+        });
+        app.MapPatch("/api/projects/{id}", (int id) =>
+        {
+            
+        });
+        
+        app.MapDelete("/api/projects/{id}", (int id) =>
+        {
+            
+        });
     }
     
 }

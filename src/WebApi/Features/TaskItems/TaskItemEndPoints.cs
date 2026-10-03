@@ -1,3 +1,5 @@
+using System.Diagnostics.Eventing.Reader;
+
 namespace WebApi.Features.TaskItems;
 
 public static class TaskItemEndPoints
@@ -8,5 +10,26 @@ public static class TaskItemEndPoints
         {
             
         });
+        
+        app.MapGet("/api/taskitems/{id}", (int id) =>
+        {
+            
+        });
+        
+        app.MapPost("/api/taskitems", () =>
+        {
+            
+        });
+        
+        app.MapPost("/api/taskitems/{id}", (int id) =>
+        {
+            
+        });
+        
+        app.MapDelete("/api/taskitems/{id}", (int id) =>
+        {
+            
+        });
+
     }
 }

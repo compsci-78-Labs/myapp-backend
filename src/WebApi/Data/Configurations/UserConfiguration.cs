@@ -27,6 +27,12 @@ public class UserConfiguration:IEntityTypeConfiguration<User>
         builder.HasIndex(u => u.Email)
             .IsUnique();
         
+        builder.Property(u => u.Role)
+            .HasConversion<String>()
+            .HasMaxLength(20)
+            .HasDefaultValue(UserRole.User)
+            .IsRequired();
+        
         builder.Property(t => t.CreatedAt)
             .HasDefaultValueSql("GETUTCDATE()")
             .IsRequired();
