@@ -11,7 +11,7 @@ public class User
     public string PasswordHash { get; set; } = String.Empty;
     
     public UserRole Role { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     public ICollection<Project> Projects { get; set; } = new List<Project>();
     public ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>();
