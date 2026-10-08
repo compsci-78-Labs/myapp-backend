@@ -46,9 +46,8 @@ public static class UserEndPoints
                 Role = request.Role
             };
             
-            Console.WriteLine($"Before service: {userToBeCreated.Id}");
             var user = await service.AddAsync(userToBeCreated );
-            Console.WriteLine($"After service: {user.Id}");
+  
             return Results.Created(
                 $"/api/users/{user?.Id}",
                 new ReadUserResponse(
@@ -82,6 +81,11 @@ public static class UserEndPoints
 
         app.MapDelete("/api/users/{id}", async (IUserService service, Guid id) =>
         {
+            
+            var user = await service.GetByIdAsync(id);
+
+            if (user == null) return Results.NotFound("User not found");
+            
             await service.Delete(id);
 
             return Results.NoContent();
