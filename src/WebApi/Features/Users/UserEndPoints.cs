@@ -39,13 +39,16 @@ public static class UserEndPoints
 
         app.MapPost("/api/users", async (IUserService service, CreateUserRrequest request) =>
         {
-            var user = await service.AddAsync(new User()
+            var userToBeCreated = new User()
             {
                 Name = request.Name,
                 Email = request.Email,
                 Role = request.Role
-            });
-
+            };
+            
+            Console.WriteLine($"Before service: {userToBeCreated.Id}");
+            var user = await service.AddAsync(userToBeCreated );
+            Console.WriteLine($"After service: {user.Id}");
             return Results.Created(
                 $"/api/users/{user?.Id}",
                 new ReadUserResponse(
