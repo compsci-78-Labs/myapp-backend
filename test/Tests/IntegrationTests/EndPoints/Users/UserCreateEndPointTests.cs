@@ -29,15 +29,10 @@ public class UserCreateEndPointTests(
             "john.doe@example.com",
             UserRole.User
         );
-        
-        var jsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
-        {
-            Converters =
-            {
-                new JsonStringEnumConverter(new LowerCaseNamingPolicy())
-            }
-        };
 
+        var jsonOptions = Helpers.GetJsonOption();
+   
+            
         // Act
         var response = await _client.PostAsJsonAsync(
             "/api/users",
@@ -48,7 +43,6 @@ public class UserCreateEndPointTests(
         response.StatusCode.Should().Be(HttpStatusCode.Created);
 
         var responseBody = await response.Content.ReadAsStringAsync();
-        output.WriteLine($"RESPONSE: {responseBody}");
 
         var createdUser = JsonSerializer.Deserialize<ReadUserResponse>(
             responseBody,
