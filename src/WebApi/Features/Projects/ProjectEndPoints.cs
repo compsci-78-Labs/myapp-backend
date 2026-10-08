@@ -1,15 +1,35 @@
-namespace WebApi.Features.Project;
+namespace WebApi.Features.Projects;
 
 public static class ProjectEndPoints
 {
     public static void MapProjectEndpoints(this WebApplication app)
     {
-        app.MapGet("/projects", () =>
+        app.MapGet("/api/projects", () =>
         {
-            return Results.Ok(new[]
-            {
-                new { Id = 1, Name = "Laptop" }
-            });
+            
+        });
+        
+        app.MapGet("/api/projects/{id}", (int id) =>
+        {
+            
+        });
+        app.MapGet("/api/projects/{id}/taskitems", (int id) =>
+        {
+            
+        });
+        
+        app.MapPost("/api/projects", () =>
+        {
+            
+        });
+        app.MapPatch("/api/projects/{id}", (int id) =>
+        {
+            
+        });
+        
+        app.MapDelete("/api/projects/{id}", (int id) =>
+        {
+            
         });
     }
     

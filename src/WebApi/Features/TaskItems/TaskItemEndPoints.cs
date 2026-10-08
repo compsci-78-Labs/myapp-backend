@@ -1,15 +1,35 @@
-namespace WebApi.Features.Task;
+using System.Diagnostics.Eventing.Reader;
+
+namespace WebApi.Features.TaskItems;
 
 public static class TaskItemEndPoints
 {
     public static void MapTaskEndpoints(this WebApplication app)
     {
-        app.MapGet("/projects", () =>
+        app.MapGet("/api/taskitems", () =>
         {
-            return Results.Ok(new[]
-            {
-                new { Id = 1, Name = "Laptop" }
-            });
+            
         });
+        
+        app.MapGet("/api/taskitems/{id}", (int id) =>
+        {
+            
+        });
+        
+        app.MapPost("/api/taskitems", () =>
+        {
+            
+        });
+        
+        app.MapPost("/api/taskitems/{id}", (int id) =>
+        {
+            
+        });
+        
+        app.MapDelete("/api/taskitems/{id}", (int id) =>
+        {
+            
+        });
+
     }
 }

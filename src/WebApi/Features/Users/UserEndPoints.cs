@@ -1,15 +1,87 @@
-namespace WebApi.Features.User;
+using WebApi.Domain.Users;
+
+namespace WebApi.Features.Users;
 
 public static class UserEndPoints
 {
     public static void MapUserEndpoints(this WebApplication app)
     {
-        app.MapGet("/tasks", () =>
+        app.MapGet("/api/users", async (IUserService service) =>
         {
-            return Results.Ok(new[]
+            var users = await service.GetAllAsync();
+            var usersArray = new List<ReadUserResponse>();
+            foreach (var user in users)
             {
-                new { Id = 1, Name = "Laptop" }
+                usersArray.Add(new ReadUserResponse(
+                    user.Id,
+                    user.Name,
+                    user.Email,
+                    user.Role
+                ));
+            }
+
+            return Results.Ok(usersArray);
+        });
+
+        app.MapGet("/api/users/{id}", async (IUserService service, Guid id) =>
+        {
+            var user = await service.GetByIdAsync(id);
+            return user != null
+                ? Results.Ok(new ReadUserResponse(
+                    user.Id,
+                    user.Name,
+                    user.Email,
+                    user.Role
+                ))
+                : Results.NotFound();
+        });
+
+
+        app.MapPost("/api/users", async (IUserService service, CreateUserRrequest request) =>
+        {
+            var user = await service.AddAsync(new User()
+            {
+                Name = request.Name,
+                Email = request.Email,
+                Role = request.Role
             });
+
+            return Results.Created(
+                $"/api/users/{user?.Id}",
+                new ReadUserResponse(
+                    user.Id,
+                    user.Name,
+                    user.Email,
+                    user.Role
+                ));
+        });
+
+
+        app.MapPut("/api/users/{id}", async (Guid id, IUserService service, UpdateUserRequest request) =>
+        {
+            var user = await service.GetByIdAsync(id);
+
+            if (user == null) return Results.NotFound("User not found");
+            
+            user.Name = request.Name;
+            user.Email = request.Email;
+            user.Role = request.Role;
+            
+            var updatedUser = await service.Update(user);
+
+            return Results.Ok(new ReadUserResponse(
+                user.Id,
+                user.Name,
+                user.Email,
+                user.Role
+                ));
+        });
+
+        app.MapDelete("/api/users/{id}", async (IUserService service, Guid id) =>
+        {
+            await service.Delete(id);
+
+            return Results.NoContent();
         });
     }
 }

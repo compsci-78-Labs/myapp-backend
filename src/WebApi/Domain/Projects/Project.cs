@@ -9,7 +9,7 @@ public class Project
     public string Name { get; set; } = String.Empty;
     public string Description {get; set; } = String.Empty;
     public Guid OwnerId { get; set; }
-    public User Owner { get; set; }
+    public User Owner { get; set; } = null!;
     public DateTime CreatedAt  {get; set; }
     
     public ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>();

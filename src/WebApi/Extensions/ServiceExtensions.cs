@@ -1,7 +1,11 @@
+using System.Text.Json.Serialization;
 using WebApi.Data;
-using WebApi.Features.Project;
-using WebApi.Features.Task;
-using WebApi.Features.User;
+using WebApi.Data.Repositories;
+using WebApi.Domain.Users;
+using WebApi.Features.Projects;
+using WebApi.Features.TaskItems;
+using WebApi.Features.Users;
+using WebApi.Serialization;
 
 namespace WebApi.Extensions;
 
@@ -21,6 +25,20 @@ public static class ServiceExtensions
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<ITaskItemService, TaskItemService>();
+
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        return services;
+    }
+    public static IServiceCollection AddApiConfiguration(
+        this IServiceCollection services)
+    {
+        services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.Converters.Add(
+                new JsonStringEnumConverter(new LowerCaseNamingPolicy())
+            );
+        });
 
         return services;
     }

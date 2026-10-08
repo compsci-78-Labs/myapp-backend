@@ -12,7 +12,7 @@ public class TaskItem
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     
     public Guid ProjectId { get; set; }
-    public Project Project { get; set; }
+    public Project Project { get; set; } = null!;
     public Guid AssignedToId { get; set; }
-    public User User { get; set; } 
+    public User User { get; set; } = null!;
 }
