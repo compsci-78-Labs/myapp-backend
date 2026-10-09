@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using FluentAssertions;
 using Tests.Common;
 using WebApi.Domain.Users;
+using WebApi.Features.Users;
 
 namespace Tests.IntegrationTests.EndPoints.Users;
 
@@ -14,35 +15,50 @@ public class UserUpdateEndpointTests(WebApiFactory factory):IClassFixture<WebApi
     public async Task UpdateUser_ShouldReturnUpdatedUser_WhenSuccess()
     {
         // Arrange
-        var newUser = new User
-        {
-            Name = "Original Name",
-            PasswordHash = "password",
-            Email = "original.email@example.com",
-            CreatedAt =  DateTime.UtcNow
-        };
+        await factory.ClearDatabaseTablesAsync();
+        await factory.SeedDatabaseAsync();
         
-        var response = await _client.PostAsJsonAsync("/api/users", newUser);
-        var createdUser = await response.Content.ReadFromJsonAsync<User>();
-
-        var userUpdates = new User
-        {
-            Id = createdUser!.Id, 
-            Name = "Updated Name",
-            Email = "updated.email@example.com",
-            PasswordHash = "newPassword",
-            CreatedAt = createdUser.CreatedAt
-        };
+        var testUser = await TestDbHelper.GetEntityAsync<User>(
+            factory.Services,
+            u => u.Name == "Alice Johnson"
+        );
+        testUser.Should().NotBeNull(); // Ensure USER IS FOUND
+        
+        var request = new UpdateUserRequest(
+            "Updated Name",
+            "updated@example.com",
+            UserRole.Admin);
         
         // Act
-        var updateResponse = await _client.PutAsJsonAsync($"/api/users/{createdUser.Id}", userUpdates);
-        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var response = await _client.PutAsJsonAsync(
+            $"/api/users/{testUser.Id}", 
+            request,
+            Helpers.GetJsonOption());
 
-        var user = await updateResponse.Content.ReadFromJsonAsync<User>();
+        var updatedUser = await response.Content.ReadFromJsonAsync<ReadUserResponse>(Helpers.GetJsonOption());
         
         // Assert
-        user.Should().NotBeNull();
-        user.Name.Should().Be("Updated Name");
-        user.Email.Should().Be("updated.email@example.com");
+        updatedUser.Should().NotBeNull();
+        updatedUser.Name.Should().Be("Updated Name");
+        updatedUser.Email.Should().Be("updated@example.com");
+        updatedUser.Role.Should().Be(UserRole.Admin);
+    }
+    [Fact]
+    public async Task UpdateUser_ShouldReturnNotFound_WhenNotExists()
+    {
+        // Arrange
+        var userId=Guid.NewGuid();
+        var request = new UpdateUserRequest(
+            "Updated Name",
+            "updated@example.com",
+            UserRole.Admin);
+        
+        var response = await _client.PutAsJsonAsync(
+            $"/api/users/{userId}",
+            request,
+            Helpers.GetJsonOption());
+        
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 }

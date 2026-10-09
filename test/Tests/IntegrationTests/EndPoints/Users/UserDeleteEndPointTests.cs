@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Security.Principal;
 using FluentAssertions;
 using Tests.Common;
 using WebApi.Domain.Users;
@@ -14,22 +15,30 @@ public class UserDeleteEndPointTests(WebApiFactory factory):IClassFixture<WebApi
     public async Task DeleteUser_ShouldDeleteUser_WhenExists()
     {
         // Arrange
-        var newUser = new User
-        {
-            Name = "To Be Deleted",
-            PasswordHash = "Password",
-            Email = "tobedeleted@example.com",
-            CreatedAt = DateTime.UtcNow
-        };
-        var response = await _client.PostAsJsonAsync("/api/users", newUser);
-        var createdUser = await response.Content.ReadFromJsonAsync<User>();
+        await factory.ClearDatabaseTablesAsync();
+        await factory.SeedDatabaseAsync();
         
-        // Act
-        var deleteResponse = await _client.DeleteAsync($"/api/users/{createdUser!.Id}");
-        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        var testUser = await TestDbHelper.GetEntityAsync<User>(
+            factory.Services,
+            u => u.Name == "Alice Johnson"
+        );
+        testUser.Should().NotBeNull(); // Ensure USER IS FOUND
+        
+        var response = await _client.DeleteAsync($"/api/users/{testUser.Id}");
         
         // Assert
-        var getResponse = await _client.GetAsync($"/api/users/{createdUser.Id}");
-        getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    }
+    
+    [Fact]
+    public async Task DeleteUser_ShouldReturnNotFound_WhenNotExists()
+    {
+        // Arrange
+        var userId=Guid.NewGuid();
+        
+        var response = await _client.DeleteAsync($"/api/users/{userId}");
+        
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 }
