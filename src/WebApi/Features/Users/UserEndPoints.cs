@@ -70,10 +70,10 @@ public static class UserEndPoints
             var updatedUser = await service.Update(user);
 
             return Results.Ok(new ReadUserResponse(
-                user.Id,
-                user.Name,
-                user.Email,
-                user.Role
+                updatedUser.Id,
+                updatedUser.Name,
+                updatedUser.Email,
+                updatedUser.Role
                 ));
         });
 
