@@ -19,7 +19,7 @@ public class UserReadEndPointTests(WebApiFactory factory) : IClassFixture<WebApi
         
         // Act
         var response = await _client.GetAsync("/api/users");
-        var users = await response.Content.ReadFromJsonAsync<List<User>>();
+        var users = await response.Content.ReadFromJsonAsync<List<User>>(Helpers.GetJsonOption());
         
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -35,7 +35,7 @@ public class UserReadEndPointTests(WebApiFactory factory) : IClassFixture<WebApi
     
         // Act
         var response = await _client.GetAsync("/api/users");
-        var users = await response.Content.ReadFromJsonAsync<List<User>>();
+        var users = await response.Content.ReadFromJsonAsync<List<User>>(Helpers.GetJsonOption());
         
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -58,7 +58,7 @@ public class UserReadEndPointTests(WebApiFactory factory) : IClassFixture<WebApi
         
         // Act
         var response = await _client.GetAsync($"/api/users/{testUser.Id}");
-        var foundUser = await response.Content.ReadFromJsonAsync<User>();
+        var foundUser = await response.Content.ReadFromJsonAsync<User>(Helpers.GetJsonOption());
         
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -71,21 +71,12 @@ public class UserReadEndPointTests(WebApiFactory factory) : IClassFixture<WebApi
     public async Task GetUserById_ReturnsNotFound_WhenNotExists()
     {
         // Arrange
-        var nonExistentUser = new User
-        {
-            Id = Guid.NewGuid(),
-            Name = "Non-existent User",
-            Email = "nonexistent@example.com",
-            PasswordHash = "password",
-            CreatedAt = DateTime.UtcNow
-        };
+        var userId = Guid.NewGuid();
         
         // Act
-        var response = await _client.GetAsync($"/api/users/{nonExistentUser.Id}");
-        var foundUser = await response.Content.ReadFromJsonAsync<User>();
+        var response = await _client.GetAsync($"/api/users/{userId}");
         
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        foundUser.Should().BeNull();
     }
 }

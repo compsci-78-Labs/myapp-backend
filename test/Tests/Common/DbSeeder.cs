@@ -16,7 +16,9 @@ public static class DbSeeder
             Id = Guid.NewGuid(),
             Name = "Alice Johnson",
             Email = "alice@example.com",
-            PasswordHash = "hashed-password-1"
+            PasswordHash = "hashed-password-1",
+            Role = UserRole.User,
+            CreatedAt = DateTime.UtcNow
         };
 
         var bob = new User
@@ -24,7 +26,9 @@ public static class DbSeeder
             Id = Guid.NewGuid(),
             Name = "Bob Smith",
             Email = "bob@example.com",
-            PasswordHash = "hashed-password-2"
+            PasswordHash = "hashed-password-2",
+            Role = UserRole.User,
+            CreatedAt = DateTime.UtcNow
         };
 
         db.Users.AddRange(alice, bob);
