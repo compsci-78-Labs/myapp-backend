@@ -25,29 +25,32 @@ public class UserService(IUserRepository repository,IUnitOfWork unitOfWork):IUse
         return user;
     }
 
-    public async Task<User?> Update(User userUpdates)
+    public async Task<User?> Update(User user)
     {
-        var userDb = await repository.GetByIdAsync(userUpdates.Id);
+        var foundUser = await repository.GetByIdAsync(user.Id);
         
-        if (userDb == null) 
+        if (foundUser == null) 
             throw new Exception("User not found") ;
         
-        userDb.Name = userUpdates.Name;
-        userDb.Email = userUpdates.Email;
+        foundUser.Name = user.Name;
+        foundUser.Email = user.Email;
+        foundUser.Role = user.Role;
+        
+        repository.Update(foundUser);
         
         await unitOfWork.SaveChangesAsync();
         
-        return userDb;
+        return foundUser;
     }
 
     public async Task Delete(Guid id)
     {
-        var userDb = await repository.GetByIdAsync(id);
+        var foundUser = await repository.GetByIdAsync(id);
         
-        if (userDb == null) 
+        if (foundUser == null) 
             throw new Exception("User not found") ;
 
-        repository.Delete(userDb);
+        repository.Delete(foundUser);
         
         await unitOfWork.SaveChangesAsync();
     }

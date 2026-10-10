@@ -32,7 +32,7 @@ public class TaskItemConfiguration: IEntityTypeConfiguration<TaskItem>
             .IsRequired();
 
         builder.Property(t => t.CreatedAt)
-            .HasDefaultValueSql("GETUTCDATE()")
+            .HasDefaultValueSql("CURRENT_TIMESTAMP")
             .IsRequired();
         
         builder.HasOne(t => t.Project)

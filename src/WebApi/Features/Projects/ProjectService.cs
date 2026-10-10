@@ -28,29 +28,30 @@ public class ProjectService(IProjectRepository repository,IUnitOfWork unitOfWork
             return project;
         }
 
-        public async Task<Project?> Update(Project projectUpdates)
+        public async Task<Project?> Update(Project project)
         {
-            var projectDb = await repository.GetByIdAsync(projectUpdates.Id);
+            var foundProject = await repository.GetByIdAsync(project.Id);
         
-            if (projectDb == null) 
+            if (foundProject == null) 
                 throw new Exception("project not found") ;
         
-            projectDb.Name = projectUpdates.Name;
-            projectDb.Description = projectUpdates.Description;
+            foundProject.Name = project.Name;
+            foundProject.Description = project.Description;
+            foundProject.OwnerId = project.OwnerId;
         
             await unitOfWork.SaveChangesAsync();
         
-            return projectDb;
+            return foundProject;
         }
 
         public async Task Delete(Guid id)
         {
-            var projectDb = await repository.GetByIdAsync(id);
+            var foundProject = await repository.GetByIdAsync(id);
         
-            if (projectDb == null) 
+            if (foundProject == null) 
                 throw new Exception("Project not found") ;
 
-            repository.Delete(projectDb);
+            repository.Delete(foundProject);
         
             await unitOfWork.SaveChangesAsync();
         }
