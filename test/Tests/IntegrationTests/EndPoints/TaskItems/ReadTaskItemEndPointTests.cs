@@ -25,7 +25,7 @@ public class ReadTaskItemEndPointTests(WebApiFactory factory) : IClassFixture<We
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         taskItems.Should().NotBeNull();
-        taskItems.Should().HaveCount(2);
+        taskItems.Should().HaveCount(3);
     }
     
     [Fact]
