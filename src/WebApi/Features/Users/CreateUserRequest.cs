@@ -2,7 +2,7 @@ using WebApi.Domain.Users;
 
 namespace WebApi.Features.Users;
 
-public record CreateUserRrequest(
+public record CreateUserRequest(
     string Name,
     string Email,
     UserRole Role
