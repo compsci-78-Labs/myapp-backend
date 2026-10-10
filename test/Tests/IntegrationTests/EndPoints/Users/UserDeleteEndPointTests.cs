@@ -4,10 +4,14 @@ using System.Security.Principal;
 using FluentAssertions;
 using Tests.Common;
 using WebApi.Domain.Users;
+using Xunit.Abstractions;
 
 namespace Tests.IntegrationTests.EndPoints.Users;
 
-public class UserDeleteEndPointTests(WebApiFactory factory):IClassFixture<WebApiFactory>
+public class UserDeleteEndPointTests(
+    WebApiFactory factory,
+    ITestOutputHelper output
+    ):IClassFixture<WebApiFactory>
 {
     private readonly HttpClient _client = factory.CreateClient();
 
@@ -23,8 +27,12 @@ public class UserDeleteEndPointTests(WebApiFactory factory):IClassFixture<WebApi
             u => u.Name == "Alice Johnson"
         );
         testUser.Should().NotBeNull(); // Ensure USER IS FOUND
-        
+                         
         var response = await _client.DeleteAsync($"/api/users/{testUser.Id}");
+        var responseBody = await response.Content.ReadAsStringAsync();
+
+        output.WriteLine($"Status Code: {response.StatusCode}");
+        output.WriteLine($"Response Body: {responseBody}");
         
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
@@ -34,6 +42,9 @@ public class UserDeleteEndPointTests(WebApiFactory factory):IClassFixture<WebApi
     public async Task DeleteUser_ShouldReturnNotFound_WhenNotExists()
     {
         // Arrange
+        await factory.ClearDatabaseTablesAsync();
+        await factory.SeedDatabaseAsync();
+
         var userId=Guid.NewGuid();
         
         var response = await _client.DeleteAsync($"/api/users/{userId}");

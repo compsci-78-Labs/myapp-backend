@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using WebApi.Data;
 using WebApi.Data.Repositories;
 using WebApi.Domain.Projects;
+using WebApi.Domain.TaskItems;
 using WebApi.Domain.Users;
 using WebApi.Features.Projects;
 using WebApi.Features.TaskItems;
@@ -29,6 +30,7 @@ public static class ServiceExtensions
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IProjectRepository, ProjectRepository>();
+        services.AddScoped<ITaskItemRepository, TaskItemRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         return services;
     }

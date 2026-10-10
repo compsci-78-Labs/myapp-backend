@@ -34,17 +34,17 @@ public class UserConfiguration:IEntityTypeConfiguration<User>
             .IsRequired();
         
         builder.Property(t => t.CreatedAt)
-            .HasDefaultValueSql("GETUTCDATE()")
+            .HasDefaultValueSql("CURRENT_TIMESTAMP")
             .IsRequired();
 
         builder.HasMany(u => u.Projects)
             .WithOne(p => p.Owner)
             .HasForeignKey(p => p.OwnerId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasMany(u => u.TaskItems)
             .WithOne(t => t.User)
             .HasForeignKey(t => t.AssignedToId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

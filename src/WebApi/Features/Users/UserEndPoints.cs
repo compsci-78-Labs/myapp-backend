@@ -81,7 +81,6 @@ public static class UserEndPoints
 
         app.MapDelete("/api/users/{id}", async (IUserService service, Guid id) =>
         {
-            
             var user = await service.GetByIdAsync(id);
 
             if (user == null) return Results.NotFound("User not found");
