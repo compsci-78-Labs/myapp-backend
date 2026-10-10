@@ -24,7 +24,7 @@ public class UserCreateEndPointTests(
     public async Task CreateUser_ReturnsCreatedUser_WhenSuccess()
     {
         // Arrange
-        var request = new CreateUserRrequest(
+        var request = new CreateUserRequest(
             "John Doe",
             "john.doe@example.com",
             UserRole.User

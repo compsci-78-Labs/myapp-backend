@@ -5,7 +5,7 @@ namespace WebApi.Domain.Projects;
 
 public class Project
 {
-    public Guid  Id{ get; set; }
+    public Guid  Id{ get; set; } = Guid.NewGuid();
     public string Name { get; set; } = String.Empty;
     public string Description {get; set; } = String.Empty;
     public Guid OwnerId { get; set; }

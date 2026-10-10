@@ -37,7 +37,7 @@ public static class UserEndPoints
         });
 
 
-        app.MapPost("/api/users", async (IUserService service, CreateUserRrequest request) =>
+        app.MapPost("/api/users", async (IUserService service, CreateUserRequest request) =>
         {
             var userToBeCreated = new User()
             {
