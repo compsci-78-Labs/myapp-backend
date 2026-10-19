@@ -30,6 +30,23 @@ jobs:
       # Build
       - name: Build
         run: dotnet build --no-restore --configuration Release
+
+      - name: Check configuration secrets
+        run: |
+          if [ -z "$SecretKey" ]; then
+            echo "JWT secret is missing or empty"
+            exit 1
+          fi
+
+          if [ -z "$ConnectionStrings__DefaultConnection" ]; then
+            echo "Database connection string is missing or empty"
+            exit 1
+          fi
+
+          echo "Required secrets are present"
+        env:
+          SecretKey: ${{ secrets.JWT_SECRET }}
+          ConnectionStrings__DefaultConnection: ${{ secrets.DB_CONNECTION_STRING }}
       
       # Test
       - name: Test
