@@ -29,9 +29,8 @@ jobs:
       
       # Build
       - name: Build
-        run: dotnet build --no-restore --configuration Releas
+        run: dotnet build --no-restore --configuration Release
 
-      # Check configuration secrets
       - name: Check configuration secrets
         run: |
           if [ -z "$SecretKey" ]; then
@@ -52,9 +51,13 @@ jobs:
       # Test
       - name: Test
         run: dotnet test --no-build --configuration Release
+        env:
+          SecretKey: ${{ secrets.JWT_SECRET }}
+          ConnectionStrings__DefaultConnection: ${{ secrets.DB_CONNECTION_STRING }}
       
       # Login to Docker Hub
       - name: Login to Docker Hub
+        if: github.event_name == 'push'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
