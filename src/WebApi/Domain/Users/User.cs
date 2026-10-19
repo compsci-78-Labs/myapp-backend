@@ -9,10 +9,11 @@ public class User
     public string Name { get; set; } = String.Empty;
     public string Email { get; set; } = String.Empty;
     public string PasswordHash { get; set; } = String.Empty;
-    
     public UserRole Role { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
+    public ICollection<RefreshToken> RefreshTokens { get; set; }
+        = new List<RefreshToken>();
     public ICollection<Project> Projects { get; set; } = new List<Project>();
     public ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>();
 }

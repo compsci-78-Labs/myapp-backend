@@ -6,7 +6,8 @@ using Tests.Common;
 using WebApi.Domain.Projects;
 using WebApi.Domain.TaskItems;
 using WebApi.Domain.Users;
-using WebApi.Features.TaskItems;
+using WebApi.Application.TaskItems;
+using WebApi.Presentation.TaskItems;
 using Xunit.Abstractions;
 
 namespace Tests.IntegrationTests.EndPoints.TaskItems;
@@ -23,20 +24,14 @@ public class CreateTaskItemEndPointTests(
     public async Task CreateTaskItem_ReturnsCreatedTaskItem_WhenSuccess()
     {
         // Arrange
-        await factory.ClearDatabaseTablesAsync();
-        await factory.SeedDatabaseAsync();
+        await SeedDatabase();
+        var authClient = await GetAuthenticatedHttpClient(UserRole.Manager);
 
         // Get project id
-        var dbProject = await TestDbHelper.GetEntityAsync<Project>(
-            factory.Services,
-            p => p.Name == "Task API"
-        );
+        var dbProject = await GetProject("Task API");
         dbProject.Should().NotBeNull(); // Ensure Project IS FOUND
 
-        var dbUser = await TestDbHelper.GetEntityAsync<User>(
-            factory.Services,
-            u => u.Name == "Alice Johnson"
-        );
+        var dbUser = await GetUser(UserRole.User, "Alice Johnson");
         dbUser.Should().NotBeNull(); // Ensure USER IS FOUND
 
         var request = new CreateTaskItemRequest(
@@ -51,7 +46,7 @@ public class CreateTaskItemEndPointTests(
         var jsonOptions = Helpers.GetJsonOption();
 
         // Act
-        var response = await _client.PostAsJsonAsync(
+        var response = await authClient.PostAsJsonAsync(
             "/api/taskitems",
             request,
             jsonOptions
@@ -74,5 +69,32 @@ public class CreateTaskItemEndPointTests(
         createdTaskItem.Status.Should().Be(request.Status);
         createdTaskItem.ProjectId.Should().Be(request.ProjectId);
         createdTaskItem.AssignedTo.Should().Be(request.AssignedToId);
+    }
+    
+    private async Task<HttpClient> GetAuthenticatedHttpClient(UserRole user)
+    {
+        var authUser = await TestDbHelper.GetEntityAsync<User>(
+            factory.Services,
+            u => u.Role == user);
+
+        return await factory.CreateAuthenticatedClientAsync(authUser!);
+    }
+    
+    private async Task<Project?> GetProject(string name)
+    {
+        return await TestDbHelper.GetEntityAsync<Project>(
+            factory.Services,
+            p =>  p.Name == name);
+    }
+    private async Task<User?> GetUser(UserRole role, string name)
+    {
+        return await TestDbHelper.GetEntityAsync<User>(
+            factory.Services,
+            u => u.Role == role && u.Name == name);
+    }
+    private async Task SeedDatabase()
+    {
+        await factory.ClearDatabaseTablesAsync();
+        await factory.SeedDatabaseAsync();
     }
 }

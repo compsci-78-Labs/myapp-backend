@@ -2,40 +2,40 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Tests.Common;
+using WebApi.Application.Auth;
 using WebApi.Domain.Users;
-using WebApi.Features.Projects;
+using WebApi.Application.Projects;
+using WebApi.Config;
+using WebApi.Presentation.Projects;
 
 namespace Tests.IntegrationTests.EndPoints.Projects;
 
 public class ProjectCreateEndPointTests(WebApiFactory factory) : IClassFixture<WebApiFactory>
 {
-    private readonly HttpClient _client = factory.CreateClient();
 
     [Fact]
     public async Task CreateProject_ReturnsCreatedProject_WhenSuccess()
     {
         // Arrange
-        await factory.ClearDatabaseTablesAsync();
-        await factory.SeedDatabaseAsync();
+        await SeedDatabase();
+        var authClient = await GetAuthenticatedHttpClient(UserRole.Manager);
         
-        // Creating a projcet requires existing user in the db
-        var dbUser = await TestDbHelper.GetEntityAsync<User>(
-            factory.Services,
-            u => u.Name == "Alice Johnson"
-        );
-        dbUser.Should().NotBeNull(); // Ensure USER IS FOUND
+        var projectOwner = await GetUser(UserRole.User, "Alice Johnson");
+        projectOwner.Should().NotBeNull(); // Ensure USER IS FOUND
         
         var request = new CreateProjectRequest(
             "Some project",
             "Some project description",
-            dbUser!.Id
+            projectOwner!.Id
         );
-
+        
         var jsonOptions = Helpers.GetJsonOption();
         
         // Act
-        var response = await _client.PostAsJsonAsync(
+        var response = await authClient.PostAsJsonAsync(
             "/api/projects",
             request,
             jsonOptions
@@ -50,6 +50,27 @@ public class ProjectCreateEndPointTests(WebApiFactory factory) : IClassFixture<W
         responseBody!.Id.Should().NotBeEmpty();
         responseBody.Name.Should().Be("Some project");
         responseBody.Description.Should().Be("Some project description");
-        responseBody.Owner.Should().Be(dbUser.Id);
+        responseBody.Owner.Should().Be(projectOwner.Id);
+    }
+    
+    private async Task<HttpClient> GetAuthenticatedHttpClient(UserRole user)
+    {
+        var authUser = await TestDbHelper.GetEntityAsync<User>(
+            factory.Services,
+            u => u.Role == user);
+
+        return await factory.CreateAuthenticatedClientAsync(authUser!);
+    }
+    
+    private async Task<User?> GetUser(UserRole role, string name)
+    {
+        return await TestDbHelper.GetEntityAsync<User>(
+            factory.Services,
+            u => u.Role == role && u.Name == name);
+    }
+    private async Task SeedDatabase()
+    {
+        await factory.ClearDatabaseTablesAsync();
+        await factory.SeedDatabaseAsync();
     }
 }

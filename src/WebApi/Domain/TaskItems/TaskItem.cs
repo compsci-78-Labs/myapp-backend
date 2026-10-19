@@ -8,7 +8,7 @@ public class TaskItem
     public string Title { get; set; } = String.Empty;
     public string Description { get; set; }= String.Empty;
     public Status Status { get; set; }
-    public Priority Priority { get; set; }
+    public Priority Priority { get; set; } = Priority.Medium;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     public Guid ProjectId { get; set; }

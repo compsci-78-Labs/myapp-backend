@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
-using WebApi.Data;
+using WebApi.Infrastructure;
 
 namespace Tests.Common;
 

@@ -1,5 +1,8 @@
+using Microsoft.Extensions.DependencyInjection;
 using WebApi.Domain.Projects;
-using WebApi.Features.Projects;
+using WebApi.Application.Projects;
+using WebApi.Domain.Users;
+using WebApi.Presentation.Projects;
 
 namespace Tests.IntegrationTests.EndPoints.Projects;
 
@@ -16,11 +19,11 @@ public class ProjectReadEndPointTests(WebApiFactory factory) : IClassFixture<Web
     public async Task GetProjects_ReturnsProjects_WhenProjectsExist()
     {
         // Arrange
-        await factory.ClearDatabaseTablesAsync();
-        await factory.SeedDatabaseAsync();
-        
+        await SeedDatabase();
+        var authClient = await GetAuthenticatedHttpClient(UserRole.Manager);
+            
         // Act
-        var response = await _client.GetAsync("/api/projects");
+        var response = await authClient.GetAsync("/api/projects");
         var projects = await response.Content.ReadFromJsonAsync<List<ReadProjectResponse>>(Helpers.GetJsonOption());
         
         // Assert
@@ -33,10 +36,12 @@ public class ProjectReadEndPointTests(WebApiFactory factory) : IClassFixture<Web
     public async Task GetProjects_ReturnsEmptyList_WhenProjectsDoseNotExist()
     {
         // Arrange
-        await factory.ClearDatabaseTablesAsync();
-    
+        await SeedDatabase();
+        var authClient = await GetAuthenticatedHttpClient(UserRole.Manager);
+        await factory.ClearProjectsTableAsync();
+        
         // Act
-        var response = await _client.GetAsync("/api/projects");
+        var response = await authClient.GetAsync("/api/projects");
         var projects = await response.Content.ReadFromJsonAsync<List<ReadProjectResponse>>(Helpers.GetJsonOption());
         
         // Assert
@@ -49,17 +54,14 @@ public class ProjectReadEndPointTests(WebApiFactory factory) : IClassFixture<Web
     public async Task GetProjectById_ReturnsProject_WhenExists()
     {
         // Arrange
-        await factory.ClearDatabaseTablesAsync();
-        await factory.SeedDatabaseAsync();
-        
-        var testProject = await TestDbHelper.GetEntityAsync<Project>(
-            factory.Services,
-            u => u.Name == "Task API"
-            );
+        await SeedDatabase();
+        var authClient = await GetAuthenticatedHttpClient(UserRole.Manager);
+
+        var testProject = await GetProject("Task API");
         testProject.Should().NotBeNull(); // Ensure PROJECT IS FOUND
         
         // Act
-        var response = await _client.GetAsync($"/api/projects/{testProject.Id}");
+        var response = await authClient.GetAsync($"/api/projects/{testProject.Id}");
         var foundProject = await response.Content.ReadFromJsonAsync<ReadProjectResponse>(Helpers.GetJsonOption());
         
         // Assert
@@ -75,12 +77,40 @@ public class ProjectReadEndPointTests(WebApiFactory factory) : IClassFixture<Web
     public async Task GetProjectById_ReturnsNotFound_WhenNotExists()
     {
         // Arrange
+        await SeedDatabase();
+        var authClient = await GetAuthenticatedHttpClient(UserRole.Manager);
         var projectId = Guid.NewGuid();
         
         // Act
-        var response = await _client.GetAsync($"/api/projects/{projectId}");
+        var response = await authClient.GetAsync($"/api/projects/{projectId}");
         
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+    private async Task<HttpClient> GetAuthenticatedHttpClient(UserRole user)
+    {
+        var authUser = await TestDbHelper.GetEntityAsync<User>(
+            factory.Services,
+            u => u.Role == user);
+
+        return await factory.CreateAuthenticatedClientAsync(authUser!);
+    }
+    
+    private async Task<Project?> GetProject(string name)
+    {
+        return await TestDbHelper.GetEntityAsync<Project>(
+            factory.Services,
+            p =>  p.Name == name);
+    }
+    private async Task<User?> GetUser(UserRole role, string name)
+    {
+        return await TestDbHelper.GetEntityAsync<User>(
+            factory.Services,
+            u => u.Role == role && u.Name == name);
+    }
+    private async Task SeedDatabase()
+    {
+        await factory.ClearDatabaseTablesAsync();
+        await factory.SeedDatabaseAsync();
     }
 }
