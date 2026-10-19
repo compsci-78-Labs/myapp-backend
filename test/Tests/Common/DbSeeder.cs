@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using WebApi.Data;
+using WebApi.Infrastructure;
 using WebApi.Domain.Projects;
 using WebApi.Domain.TaskItems;
 using WebApi.Domain.Users;
@@ -11,6 +11,25 @@ public static class DbSeeder
     public static async Task Seed(AppDbContext db)
     {
         // Users
+        var admin = new User
+        {
+            Id = Guid.NewGuid(),
+            Name = "Admin Admin",
+            Email = "admin@example.com",
+            PasswordHash = "hashed-password-admin",
+            Role = UserRole.Admin,
+            CreatedAt = DateTime.UtcNow
+        };
+        var manager = new User
+        {
+            Id = Guid.NewGuid(),
+            Name = "Manager Manager",
+            Email = "manager@example.com",
+            PasswordHash = "hashed-password-manager",
+            Role = UserRole.Manager,
+            CreatedAt = DateTime.UtcNow
+        };
+        
         var alice = new User
         {
             Id = Guid.NewGuid(),
@@ -31,7 +50,7 @@ public static class DbSeeder
             CreatedAt = DateTime.UtcNow
         };
 
-        db.Users.AddRange(alice, bob);
+        db.Users.AddRange(admin,manager,alice, bob);
 
         // Projects
         var websiteProject = new Project

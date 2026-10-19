@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using WebApi.Domain.Users;
 using WebApi.Serialization;
 
 namespace Tests.Common;
